@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family: 'Quicksand';
+}
+
+body {
+  font-family: var(--font-family);
+}
+
+/* Apply font weight 500 to h1 elements */
+h1 {
+  font-weight: 500;
+}
