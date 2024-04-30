@@ -6,7 +6,7 @@ import { MdOutlineVerified } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../Ultiles/Cartslices"; // Import addToCart action
-import { alert } from "../Ultiles/Cartslices"; // Import addToCart action
+// import { alert } from "../Ultiles/Cartslices"; // Import addToCart action
 
 
 const responsive = {
@@ -30,13 +30,11 @@ const responsive = {
 const Bestdeal = () => {
   const dispatch = useDispatch();
   const [amount, setAmount] = useState(1);
-  const [showAlert, setShowAlert] = useState(false); // Define showAlert state
 
 
   const handleAddToCart = (product) => {
-    // setShowAlert(true);
-        dispatch(addToCart(product));
-        dispatch(alert(true));
+    dispatch(addToCart(product));
+    // dispatch(alert(true));
   };
 
   const [cartButtonStates, setCartButtonStates] = React.useState(
@@ -47,7 +45,6 @@ const Bestdeal = () => {
     const newButtonStates = [...cartButtonStates];
     newButtonStates[index] = "VIEW CART";
     setCartButtonStates(newButtonStates);
-    // Add logic to handle adding the product to the cart
   };
 
   return (
@@ -102,16 +99,15 @@ const Bestdeal = () => {
                   </p>
                 </div>
                 <button
-                  className="bg-[#00AFEF] text-white py-3"
+                  className="bg-[#00AFEF] text-white py-3 text-center"
                   onClick={(event) => {
                     event.preventDefault(); // Prevent navigation
                     handleViewToCart(index);
-                    handleAddToCart({...product,amount});
+                    handleAddToCart({ ...product, amount });
                   }}
                 >
                   Add TO CART
                 </button>
-
                 <h1 className="bg-[#00AFEF] text-white text-[12px] font-[600] w-[100px] text-center px-2 py-1 absolute rounded-tl-lg rounded-br-lg">
                   BEST SELLERS
                 </h1>

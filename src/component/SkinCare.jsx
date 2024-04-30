@@ -70,7 +70,7 @@ const SkinCare = () => {
                   <p className="text-gray-600 font-medium text-sm">{product.category}</p>
                   <p className="text-gray-700 font-bold text-sm py-3">{product.price}</p>
                 </div>
-                <button className="bg-[#00AFEF] text-white py-3">ADD TO CART</button>
+                <button className="bg-[#00AFEF] text-white py-3 text-center">ADD TO CART</button>
                 <h1 className="bg-[#AA48D4] text-white text-[12px] font-[600] w-[100px] text-center px-2 py-1 absolute rounded-tl-lg rounded-br-lg"><Timer/></h1>
               </div>
             </Link>

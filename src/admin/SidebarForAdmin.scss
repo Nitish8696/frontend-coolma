@@ -1,0 +1,34 @@
+.SidebarForAdmin{
+    width: 20%;
+    background-color: #1D2327;
+    color: white;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    height: 100vh;
+    flex-direction: column;
+    margin-bottom: 100px;
+    .admin-sidebar-products{
+        color: white;
+        display: flex;
+        gap: 10px;
+       .icon-box{
+        font-size: 15px;
+       }
+        span{
+            text-decoration: none;
+            color: white;
+        }
+    }
+    .admin-add-products{
+        color: white;
+        display: flex;
+        gap: 10px;
+        span{
+            text-decoration: none;
+        }
+        .icon-add{
+            font-size: 20px;
+           }
+    }
+}

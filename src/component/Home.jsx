@@ -4,19 +4,21 @@ import SkinCare from "./SkinCare.jsx"
 import Custumer from "./Custumer.jsx"
 import Header from "./Header.jsx"
 import Therapy from './Therapy.jsx'
-import Alert from './Alert.jsx'
 import Timer from './Timer.jsx'
 import Arrival from './Arrival.jsx'
+import MobileCategory from './MobileCategory.jsx'
 const Home = () => {
   return (
     <div className='pt-5'>
-      <BestSelling/>     
-   <SkinCare/> 
-   <Therapy/>
-   <Arrival/>
-   <Custumer/>
-   <Header/>
-   <Alert/>
+      <div className=' sm:hidden'>
+        <MobileCategory />
+      </div>
+      <BestSelling />
+      <SkinCare />
+      <Therapy />
+      <Arrival />
+      <Custumer />
+      <Header />
     </div>
   )
 }

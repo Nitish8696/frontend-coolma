@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-// import { publicRequest } from '../requestMethods'
+import { publicRequest } from '../requestMethods'
 
 const Login = () => {
     const [user, setUser] = useState({})
@@ -26,7 +26,6 @@ const Login = () => {
             const response = await publicRequest.post('/auth/login', {
                 formData: formData
             })
-            console.log(response)
             setUser(response.data)
             setMessage(() => {
                 if (response.data.msg) {
@@ -47,7 +46,7 @@ const Login = () => {
                 }
             }, 1000)
         } catch (error) {
-            setMessage(error.message)
+            setMessage("Something went wrong try again later")
             setLoading(false)
         }
     };
@@ -81,10 +80,11 @@ const Login = () => {
                         style={{ borderBottom: '1px solid #D1D1D1' }}
                     />
                 </div>
-                <button type="submit" className='p-2  text-[16px]  rounded w-[100px] m-auto bg-[#00AFEF] text-white font-[500] border hover:bg-white hover:text-[#00AFEF] hover:border border-[#00AFEF]' >{loading ? '...Loading' : 'Login'}</button>
-                {message && <p>{message}</p>}
+                <button type="submit" className='p-2  text-[16px] text-center rounded w-[100px] m-auto bg-[#00AFEF] text-white font-[500] border hover:bg-white hover:text-[#00AFEF] hover:border border-[#00AFEF]' >{loading ? '...Loading' : 'Login'}</button>
+                <div className='flex items-center justify-center'>
+                    {message && <p className='bg-[#b43232] text-white p-2 rounded text-sm font-normal'>{message}</p>}
+                </div>
             </form>
-            {user.status === 409 && <p className='bg-[#b43232] text-white p-2 rounded text-sm font-normal'>{user.status === 409 ? 'Username Or Email Already Exist' : ''}</p>}
             <p className='text-sm mt-2' >Not A Member <Link to={'/register'}><span className='text-[#00AFEF]'>Register Now</span></Link></p>
         </div>
     )

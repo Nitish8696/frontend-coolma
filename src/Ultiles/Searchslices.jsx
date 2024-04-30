@@ -17,8 +17,10 @@ const Searchslices = createSlice({
           state.address = action.payload
         },
         addSearchTerm : (state, action) => {
+          console.log(action.payload)
             state.searchTerm = action.payload
-        }
+        },
+        
     }
 })
 

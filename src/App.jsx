@@ -1,65 +1,190 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Provider } from "react-redux";
-import Store from "./Ultiles/Store";
+import React from "react";
+import {  Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Navbar from "./component/Navbar";
-import Singleproduct from "./component/Singleproduct.jsx";
 import Home from "./component/Home.jsx";
 import Cart from "./component/Cart.jsx";
-import Stepper from "./component/Stepper.jsx";
 import Login from "./component/Login.jsx";
 import Register from "./component/Register.jsx";
 import Search from "./component/Search.jsx";
 import Footer from "./component/Footer.jsx";
 import PopUp from "./component/PopUp.jsx";
-import { googleTranslateElementInit } from './component/GoogleTranslate.jsx';
+import ProductByCategory from "./component/ProductByCategory.jsx";
+import Admin from "./admin/Admin.jsx";
+import AllProducts from "./admin/AllProducts.jsx";
+import Orders from "./admin/Orders.jsx"
+import Category from "./admin/Category.jsx";
+import SidebarForAdmin from "./admin/SidebarForAdmin.jsx"
+import { Navigate } from "react-router-dom";
+import AdminSingleProduct from "./admin/SingleProduct.jsx";
+import SingleProduct from "./component/Singleproduct.jsx";
+import Checkout from "./component/Checkout.jsx";
+import Payment from "./component/Payment.jsx";
+import Success from "./component/Success.jsx";
+import Error from "./component/Error.jsx";
+import Pending from "./component/Pending.jsx";
+import Rent from "./component/Rent.jsx";
+import Blogs from "./component/Blog.jsx";
+import SubCategory from "./component/SubCategory.jsx";
+import Blog from "./admin/Blog.jsx";
+import CategoryPost from "./admin/CategoryPost.jsx";
+import PostCreate from "./admin/PostCreate.jsx";
+import SinglePost from "./component/SinglePost.jsx";
+import AllPosts from "./admin/AllPosts.jsx";
 
 
-function App() {
-  const [showPopup, setShowPopup] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("en"); // Default language is English
+const App = () => {
 
-  // Open the language selection popup after 5 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPopup(true);
-    }, 5000);
+  const {user} = useSelector((state) => state.userloggedin);
 
-    return () => clearTimeout(timer);
-  }, []);
 
-  // Close the language selection popup
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+  const Layout = () => {
+    return (
+      <>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </>
+    )
+  }
 
-  const handleLanguageChange = (language) => {
-    setSelectedLanguage(language);
-    googleTranslateElementInit(language);
-  };
+  const PrivateRoute = ({children}) => {
+    if (!user.isAdmin) {
+      return <Navigate to="/" replace />;
+    }
 
- 
+    return children;
+  }
   
+  const LayoutForAdmin = () => {
+    return (
+      <>
+        <div className='flex gap-2'>
+          <SidebarForAdmin />
+          <Outlet />
+        </div>
+      </>
+    )
+  }
+
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: (<Layout />),
+      children: [
+        {
+          path: '/',
+          element: <Home />
+        },
+        {
+          path: "/products/:id",
+          element: <ProductByCategory />
+        },
+        {
+          path: "/product/:id",
+          element: <SingleProduct />
+        },
+        {
+          path: "/cart",
+          element: <Cart />,
+        },
+        {
+          path: "/success/PAYMENT_SUCCESS/:id",
+          element: <Success />,
+        },
+        {
+          path: "/error/:id",
+          element: <Error />,
+        },
+        {
+          path: "/pending/:id",
+          element: <Pending />,
+        },
+        {
+          path: "/checkout",
+          element: <Checkout />,
+        },
+        {
+          path: "/payment/:id",
+          element: <Payment />,
+        },
+        {
+          path: "/search",
+          element: <Search />,
+        },
+        {
+          path: "/rent",
+          element: <Rent />,
+        },
+        {
+          path: "/subcategory/:id",
+          element: <SubCategory />,
+        },
+        {
+          path: "/blog",
+          element: <Blogs />
+        },
+        {
+          path: "/singlepost/:id",
+          element: <SinglePost />
+        },
+        {
+          path: "/admin",
+          element: (<PrivateRoute><LayoutForAdmin /></PrivateRoute>),
+          children: [
+            {
+              path: "/admin",
+              element: <Admin />
+            },
+            {
+              path: "/admin/products",
+              element: <AllProducts />
+            },
+            {
+              path: "/admin/orders",
+              element: <Orders />
+            },
+            {
+              path: "/admin/category",
+              element: <Category />
+            },
+            {
+              path: "/admin/singleproduct/:id",
+              element: <AdminSingleProduct />
+            },
+            {
+              path: "/admin/blog",
+              element: <Blog />
+            },
+            {
+              path: "/admin/category/post",
+              element: <CategoryPost />
+            },
+            {
+              path: "/admin/create/post",
+              element: <PostCreate />
+            },
+            {
+              path: "/admin/all-posts",
+              element: <AllPosts />
+            },
+          ]
+        },
+      ]
+    },
+    {
+      path: "/login",
+      element: <Login />
+    },
+    {
+      path: "/register",
+      element: <Register />,
+    }
+  ]);
+
 
   return (
-    <Provider store={Store}>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/checkout" element={<Stepper />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/product/:productId" element={<Singleproduct />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
-        <Footer />
-        {/* {showPopup && (
-          <PopUp onClose={handleClosePopup} onLanguageChange={handleLanguageChange} />
-        )} */}
-      </BrowserRouter>
-    </Provider>
+    <RouterProvider router={router} />
   );
 }
 

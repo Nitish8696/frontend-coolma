@@ -1,12 +1,12 @@
-// import axios from 'axios';
 import React, { useState } from 'react'
 import { Link, useNavigate, } from 'react-router-dom';
-// import { publicRequest } from '../requestMethods'
+import { publicRequest } from '../requestMethods'
 
 const Register = () => {
     const [user,setUser] = useState({})
     const [loading,setLoading] = useState(false)
     const navigate = useNavigate()
+    const [error,setError] = useState('')
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -21,6 +21,10 @@ const Register = () => {
         }));
     };
     const handleSubmit = async (e) => {
+        if (!formData.username || !formData.email || !formData.password) {
+            setError('Please fill all required fields')
+            return;
+        }
         e.preventDefault();
         setLoading(true)
         const response = await publicRequest.post('/auth/register', {
@@ -37,6 +41,7 @@ const Register = () => {
     return (
         <div className='lg:w-[40%] w-[90%] m-auto my-20 flex flex-col items-center justify-center shadow-xl rounded-md py-2'>
             <h2 className='text-2xl font-semibold'>Register</h2>
+            {error && <span className=''>{error}</span>}
             <form onSubmit={handleSubmit} className='w-full py-2 px-4 rounded flex flex-col gap-3'>
                 <div className='flex flex-col gap-1 w-full'>
                     <label htmlFor="username" className='w-full font-medium'>Username:</label>
@@ -77,7 +82,7 @@ const Register = () => {
                         style={{ borderBottom: '1px solid #D1D1D1' }}
                     />
                 </div>
-                <button type="submit" className='p-2  text-[16px]  rounded w-[100px] m-auto bg-[#00AFEF] text-white font-[500] border hover:bg-white hover:text-[#00AFEF] hover:border border-[#00AFEF]' >{loading ? '...Loading' : 'Login'}</button>
+                <button type="submit" className='p-2  text-[16px]  rounded w-[100px] m-auto bg-[#00AFEF] text-white font-[500] border hover:bg-white hover:text-[#00AFEF] hover:border border-[#00AFEF] text-center' >{loading ? '...Loading' : 'Register'}</button>
             </form>
             {user.status === 409 && <p className='bg-[#b43232] text-white p-2 rounded text-sm font-normal'>{user.status === 409 ? 'Username Or Email Already Exist' : ''}</p>}
             <p className='text-sm mt-2' >Already Member <Link to={'/login'}><span className='text-[#00AFEF]'>Sign In</span></Link></p>

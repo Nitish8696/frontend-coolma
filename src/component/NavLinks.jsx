@@ -1,72 +1,109 @@
-import React, { useState } from "react";
-import { links } from "../demo/Mylinks";
+import React, { useEffect, useState } from "react";
+import * as Menubar from '@radix-ui/react-menubar';
+import { CheckIcon, ChevronRightIcon, DotFilledIcon } from '@radix-ui/react-icons';
+import { useDispatch } from "react-redux";
+import './styles.css';
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const NavLinks = () => {
-        const [openSubmenu, setOpenSubmenu] = useState(""); // State to track which submenu is open
+  const [categoryWithNull, setCategoryWithNull] = useState([])
 
-        const toggleSubmenu = (name) => {
-          setOpenSubmenu(openSubmenu === name ? "" : name); // Toggle the submenu based on its current state
-        };
-      
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const getCategoryData = async () => {
+      const getCategory = await axios.get('http://localhost:8000/api/category/')
+      setCategoryWithNull(getCategory.data)
+    }
+    getCategoryData()
+  }, [])
+
+
+  function findChildCategories(parentId) {
+    const children = [];
+    categoryWithNull.forEach(category => {
+      if (category.parentCategory === parentId) {
+        const childCategory = { ...category };
+        const subChildren = findChildCategories(category._id);
+        if (subChildren.length > 0) {
+          childCategory.children = subChildren;
+        }
+        children.push(childCategory);
+      }
+    });
+    return children;
+  }
+
+  // Find top-level categories
+  const topLevelCategories = categoryWithNull?.filter(category => category.parentCategory === null);
+
+  // Build hierarchical structure
+  const hierarchicalCategories = topLevelCategories.map(category => {
+    const topLevelCategory = { ...category };
+    const children = findChildCategories(category._id);
+    if (children.length > 0) {
+      topLevelCategory.children = children;
+    }
+    return topLevelCategory;
+  });
+
+
+
+  let renderCategoriesRight = (categories) => {
+    return <Menubar.Root className="MenubarRoot">
+      {categories?.map((category) => {
+        return <Menubar.Menu>
+          <Menubar.Trigger className="MenubarTrigger text-sm">
+            {(category.name).toUpperCase()}
+            <div className="RightSlot">
+              <ChevronRightIcon />
+            </div>
+          </Menubar.Trigger>
+
+          <Menubar.Portal>
+            <Menubar.Content className="MenubarContent" align="start" sideOffset={5} alignOffset={-3}>
+              {
+                category.children && category.children.map((child) => {
+                  return <><Menubar.Sub key={child._id}>
+                    <Link to={`/products/${child._id}`}>
+                      <Menubar.SubTrigger className="MenubarSubTrigger">
+                        {child.name}
+                        <div className="RightSlot">
+                          <ChevronRightIcon />
+                        </div>
+                      </Menubar.SubTrigger>
+                    </Link>
+                    {
+                      child.children && <Menubar.Portal>
+                        <Menubar.SubContent className="MenubarSubContent" alignOffset={-5}>
+                          {
+                            child.children && child.children.map((child) => {
+                              return <Link to={`/products/${child._id}`}>
+                                <Menubar.Item className="MenubarItem">{child.name}</Menubar.Item>
+                              </Link>
+                            })
+                          }
+                        </Menubar.SubContent>
+                      </Menubar.Portal>
+                    }
+                  </Menubar.Sub>
+                  </>
+                })
+              }
+            </Menubar.Content>
+          </Menubar.Portal>
+        </Menubar.Menu>
+      })}
+    </Menubar.Root>
+  }
+
   return (
     <>
-      {/* Desktop view */}
-      <div className="hidden  sm:flex">
-        {links.map((link, index) => (
-          <div key={index} className="px-3 md:cursor-pointer group relative flex items-center">
-            <div>{link.name}</div> {/* Wrapping link.name in a div */}
-            {link.submenu && (
-              <div className="absolute top-[30px] w-[800px] left-[-350px] hidden group-hover:md:block hover:md:block shadow-2xl">
-                <div className="bg-white p-5 grid grid-cols-5 gap-10 mt-5">
-                  {link.sublinks.map((mysublinks, subIndex) => (
-                    <div key={subIndex}>
-                      <h1 className="text-lg font-semibold">{mysublinks.Head}</h1>
-                      {mysublinks.sublink.map((slink, subSubIndex) => (
-                        <li key={subSubIndex} className="text-sm text-gray-600 my-2.5">
-                          <div className="hover:text-primary">{slink.name}</div>
-                        </li>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      {
+        hierarchicalCategories && renderCategoriesRight(hierarchicalCategories)
+      }
 
-      {/* Mobile view */}
-      <>
-      <style>
-        {`
-          .submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-          }
-          .submenu.open {
-            max-height: 200px; /* Adjust the height as needed */
-          }
-        `}
-      </style>
-      <div className="sm:hidden block">
-        <ul>
-          {links.map((link, index) => (
-            <li key={index}>
-              <div className="text-2xl" onClick={() => toggleSubmenu(link.name)}>
-                {link.name}
-              </div>
-              {/* Render the submenu only if its name matches the openSubmenu state */}
-              <ul className={`ml-4 submenu ${openSubmenu === link.name ? "open" : ""}`}>
-                {link.sublinks.map((sublink, subIndex) => (
-                  <li key={subIndex}>{sublink.Head}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
     </>
   );
 };

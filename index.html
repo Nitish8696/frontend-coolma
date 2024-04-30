@@ -10,10 +10,6 @@
   <style>
     /* Customize the Google Translate element */
     #google_translate_element {
-      position: fixed;
-      top: 0px;
-      right: 0px;
-      z-index: 9999;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -26,7 +22,6 @@
     }
     .goog-te-gadget {
       display: non;
-
     }
     .goog-te-gadget .goog-te-combo {
       display: block;
@@ -42,18 +37,18 @@
 <body>
   <div id="root"></div>
   
-  <div id="google_translate_element"></div>
+  <!-- <div id="google_translate_element"></div> -->
   <script type="text/javascript">
-    setTimeout(()=>{
+    // setTimeout(()=>{
       
-    },2000)
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'en,hi,gu' }, 'google_translate_element');
-    }
-    googleTranslateElementInit('hi'); // Example: Set language to Hindi
+    // },2000)
+    // function googleTranslateElementInit() {
+    //   new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'en,hi,gu' }, 'google_translate_element');
+    // }
+    // googleTranslateElementInit('hi'); // Example: Set language to Hindi
   </script>
 
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   
   <script type="module" src="/src/main.jsx"></script>
 </body>

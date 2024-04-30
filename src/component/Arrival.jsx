@@ -95,7 +95,7 @@ const Arrival = () => {
                   </p>
                 </div>
                 <button
-                  className="bg-[#00AFEF] text-white py-3"
+                  className="bg-[#00AFEF] text-white py-3 text-center"
                   onClick={(event) => {
                     event.preventDefault(); // Prevent navigation
                     handleViewToCart(index);
